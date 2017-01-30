@@ -23,7 +23,6 @@ public class ExplosionBehavior : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
         timer += Time.fixedDeltaTime;
         if (timer >= explosionDuration)
         {
