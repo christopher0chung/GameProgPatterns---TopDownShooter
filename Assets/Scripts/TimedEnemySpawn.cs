@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour {
+public class TimedEnemySpawn : MonoBehaviour {
 
     private PoolDepot myPD;
     private float timer;
     public float spawnIntervalTemp;
+    public DepotItem whatToSpawn;
 
 	// Use this for initialization
 	void Start () {
@@ -20,10 +21,9 @@ public class EnemyManager : MonoBehaviour {
         if (timer >= spawnIntervalTemp)
         {
             timer = 0;
-            GameObject myEnemy = myPD.ObjRequest(DepotItem.enemyType1);
+            GameObject myEnemy = myPD.ObjRequest(whatToSpawn);
             myEnemy.transform.position = new Vector3(Random.Range(-100, 100), 0, Random.Range(-50, 50));
             myEnemy.SetActive(true);
         }
-		
 	}
 }

@@ -6,7 +6,7 @@ public class BulletBehavior : MonoBehaviour {
 
     private PoolDepot myPD;
     private float timer;
-    private float flightTime = 2;
+    private float flightTime = 3;
 
     public int bulletDamage;
 
