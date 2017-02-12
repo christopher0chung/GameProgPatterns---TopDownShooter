@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class ShipGuns : MonoBehaviour {
 
-    public PoolDepot myPD;
+    private PoolDepot myPD;
+    private float timer;
+    public float reloadTime;
 
 	// Use this for initialization
 	void Start () {
@@ -13,8 +15,11 @@ public class ShipGuns : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0))
+        timer += Time.deltaTime;
+
+        if (Input.GetMouseButton(0) && timer >= reloadTime)
         {
+            timer = 0;
             GameObject bullet = myPD.ObjRequest(DepotItem.bullet);
             bullet.transform.position = transform.position + transform.forward * 3;
             bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;

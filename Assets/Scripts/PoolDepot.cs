@@ -16,12 +16,16 @@ public class PoolDepot : MonoBehaviour {
     private GameObject enemyType2;
     public Queue<GameObject> enemiesType2 = new Queue<GameObject>();
 
+    private GameObject playerDeath;
+    public Queue<GameObject> playerDeaths = new Queue<GameObject>();
+
     void Awake ()
     {
         bullet = (GameObject) Resources.Load("Bullet");
         explosion = (GameObject)Resources.Load("Explosion");
         enemyType1 = (GameObject)Resources.Load("EnemyType1");
         enemyType2 = (GameObject)Resources.Load("EnemyType2");
+        playerDeath = (GameObject)Resources.Load("PlayerDeath");
     }
 
     public GameObject ObjRequest (DepotItem item)
@@ -54,6 +58,13 @@ public class PoolDepot : MonoBehaviour {
             else
                 return Instantiate(enemyType2, transform);
         }
+        else if (item == DepotItem.playerDeath)
+        {
+            if (enemiesType2.Count > 0)
+                return enemiesType2.Dequeue();
+            else
+                return Instantiate(enemyType2, transform);
+        }
         else return null;
     }
 
@@ -80,10 +91,13 @@ public class PoolDepot : MonoBehaviour {
             enemiesType2.Enqueue(theObj);
             theObj.SetActive(false);
         }
+        else if (itemType == DepotItem.playerDeath)
+        {
+            playerDeaths.Enqueue(theObj);
+            theObj.SetActive(false);
+        }
     }
-
-
 }
 
-public enum DepotItem { bullet, explosion, enemyType1, enemyType2 }
+public enum DepotItem { bullet, explosion, enemyType1, enemyType2, playerDeath }
 

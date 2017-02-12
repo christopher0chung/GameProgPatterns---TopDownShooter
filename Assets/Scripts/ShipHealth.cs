@@ -9,5 +9,9 @@ public class ShipHealth : MonoBehaviour, iShootable {
     public void OnShoot(int damage)
     {
         health -= damage;
+        if (health <= 0)
+        {
+            
+        }
     }
 }
