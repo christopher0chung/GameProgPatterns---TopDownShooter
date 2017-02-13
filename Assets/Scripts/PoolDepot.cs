@@ -60,13 +60,13 @@ public class PoolDepot : MonoBehaviour {
             if (enemiesType1.Count > 0)
             {
                 GameObject thisMob = (GameObject)enemiesType1.Dequeue();
-                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                myMM.DepotToManager(thisMob.GetComponent<MobSubclassSandbox>());
                 return thisMob;
             }
             else
             {
                 GameObject thisMob = (GameObject)Instantiate(enemyType1, transform);
-                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                myMM.DepotToManager(thisMob.GetComponent<MobSubclassSandbox>());
                 return thisMob; 
             }
         }
@@ -75,13 +75,13 @@ public class PoolDepot : MonoBehaviour {
             if (enemiesType2.Count > 0)
             {
                 GameObject thisMob = (GameObject)enemiesType2.Dequeue();
-                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                myMM.DepotToManager(thisMob.GetComponent<MobSubclassSandbox>());
                 return thisMob;
             }
             else
             {
                 GameObject thisMob = (GameObject)Instantiate(enemyType2, transform);
-                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                myMM.DepotToManager(thisMob.GetComponent<MobSubclassSandbox>());
                 return thisMob;
             }
         }

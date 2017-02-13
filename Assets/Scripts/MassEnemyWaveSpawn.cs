@@ -33,9 +33,9 @@ public class MassEnemyWaveSpawn : MonoBehaviour
 
             if (dir <= 1)
                 SpawnTopBottom(dir);
-            if (dir >= 2)
+            else if (dir >= 2 && dir <4)
                 SpawnLeftRight(dir);
-            else
+            else if (dir >= 4)
                 CircSpawn(80);
         }
     }

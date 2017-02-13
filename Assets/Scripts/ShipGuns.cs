@@ -8,13 +8,16 @@ public class ShipGuns : MonoBehaviour {
     private float timer;
     public float reloadTime;
 
+    public MobManager myMM;
+
 	// Use this for initialization
 	void Start () {
         myPD = GameObject.Find("PoolDepot").GetComponent<PoolDepot>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        myMM = GameObject.Find("ObjectsManager").GetComponent<MobManager>();
+    }
+
+    // Update is called once per frame
+    void Update () {
         timer += Time.deltaTime;
 
         if (Input.GetMouseButton(0) && timer >= reloadTime)
@@ -25,6 +28,11 @@ public class ShipGuns : MonoBehaviour {
             bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
             bullet.SetActive(true);
             bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 130f, ForceMode.Impulse);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log(myMM.NumOfType(DepotItem.enemyType1));
         }
 	}
 }

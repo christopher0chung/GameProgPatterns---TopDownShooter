@@ -2,14 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mob : MonoBehaviour, IManaged
+//public class Mob : MonoBehaviour, IManaged
+//{
+//    public DepotItem myType;
+//    public DepotItem myOrdinance;
+//    public float myHealth;
+//    public float moveForce;
+
+//    public Mob(float theHealth, DepotItem theType, DepotItem theOrdinance, float moveF)
+//    {
+//        myHealth = theHealth;
+//        myType = theType;
+//        myOrdinance = theOrdinance;
+//        moveForce = moveF;
+//    }
+
+//    public virtual void OnManagerWithdraw()
+//    {
+//        //Debug.Log("Withdrawn");
+//        return;
+//    }
+
+//    public virtual void OnManagerReturn()
+//    {
+//        //Debug.Log("Returned");
+//        return;
+//    }
+//}
+
+
+// -------------------------------------------------------------
+
+public class MobSubclassSandbox: MonoBehaviour, IManaged
 {
     public DepotItem myType;
     public DepotItem myOrdinance;
     public float myHealth;
     public float moveForce;
 
-    public Mob(float theHealth, DepotItem theType, DepotItem theOrdinance, float moveF)
+    public virtual void Init(float theHealth, DepotItem theType, DepotItem theOrdinance, float moveF)
     {
         myHealth = theHealth;
         myType = theType;
@@ -19,20 +50,16 @@ public class Mob : MonoBehaviour, IManaged
 
     public virtual void OnManagerWithdraw()
     {
-        Debug.Log("Withdrawn");
+        //Debug.Log("Withdrawn");
+        return;
     }
 
     public virtual void OnManagerReturn()
     {
-        Debug.Log("Returned");
+        //Debug.Log("Returned");
+        return;
     }
-}
 
-
-// -------------------------------------------------------------
-
-public class MobSubclassSandbox: MonoBehaviour
-{ 
     public virtual Vector3 ReturnTangentPoint(Vector3 here, Vector3 center, float radius)
     {
         float dist = Vector3.Distance(here, center);

@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class EnemyType1 : MobSubclassSandbox {
 
-    public Mob thisMob; 
+    //public Mob thisMob; 
+
 
     public float shootDelay;
     public float shootInterval;
@@ -16,15 +17,18 @@ public class EnemyType1 : MobSubclassSandbox {
     // Use this for initialization
     void Awake () {
         myRB = GetComponent<Rigidbody>();
-        thisMob = new Mob(1f, DepotItem.enemyType1, DepotItem.bullet, 70f);
+        //thisMob = new Mob(1f, DepotItem.enemyType1, DepotItem.bullet, 70f);
 	}
 
     void OnEnable()
     {
-        thisMob.OnManagerWithdraw();
+        base.OnManagerWithdraw();
+        //Debug.Log(myHealth);
+        Init(1, DepotItem.enemyType1, DepotItem.bullet, 70);
+
     }
-	
-	void FixedUpdate()
+
+    void FixedUpdate()
     {
         Look();
         Move();
@@ -35,8 +39,8 @@ public class EnemyType1 : MobSubclassSandbox {
     {
         if (other.name == "Bullet(Clone)")
         {
-            thisMob.OnManagerReturn();
-            base.Kill(thisMob.myType);
+            OnManagerReturn();
+            Kill(myType);
         }
     }
 
@@ -47,12 +51,12 @@ public class EnemyType1 : MobSubclassSandbox {
 
     public void Move ()
     {
-        myRB.AddForce(base.UnitVectorToPlayer() * thisMob.moveForce);
+        myRB.AddForce(UnitVectorToPlayer() * moveForce);
     }
 
     public void Look ()
     {
-        Vector3 playerPos = base.RadarReturnPlayer();
+        Vector3 playerPos = RadarReturnPlayer();
         float lookAng = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z - transform.position.z) * Mathf.Rad2Deg;
         myRB.rotation = Quaternion.Euler(0, lookAng, 0);
     }
@@ -68,7 +72,7 @@ public class EnemyType1 : MobSubclassSandbox {
         if (shootTimer >= shootInterval)
         {
             shootTimer = 0;
-            base.Shoot(thisMob.myOrdinance, transform.position);
+            Shoot(myOrdinance, transform.position);
         }
     }
 }
