@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyType2 : Mob {
+public class EnemyType2 : MobSubclassSandbox {
 
-    public MobClass thisMob;
+    public Mob thisMob;
 
     public float shootDelay;
     public float shootInterval;
@@ -13,9 +13,14 @@ public class EnemyType2 : Mob {
     private float shootTimer;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         myRB = GetComponent<Rigidbody>();
-        thisMob = new MobClass(1, DepotItem.enemyType2, DepotItem.bullet, 40);
+        thisMob = new Mob(1, DepotItem.enemyType2, DepotItem.bullet, 40);
+    }
+
+    void OnEnable()
+    {
+        thisMob.OnManagerWithdraw();
     }
 
     void FixedUpdate()
@@ -29,6 +34,7 @@ public class EnemyType2 : Mob {
     {
         if (other.name == "Bullet(Clone)")
         {
+            thisMob.OnManagerReturn();
             base.Kill(thisMob.myType);
         }
     }
@@ -38,7 +44,7 @@ public class EnemyType2 : Mob {
     //Abstract funcs
     //------------
 
-    public override void Move()
+    public void Move()
     {
         //if (Vector3.Distance(transform.position, Vector3.zero) > 10.2f || Vector3.Distance(transform.position, Vector3.zero) < 9.8f)
             myRB.AddForce(base.UnitVectorToPoint(base.ReturnTangentPoint(transform.position, Vector3.zero, 30)) * thisMob.moveForce);
@@ -46,7 +52,7 @@ public class EnemyType2 : Mob {
         //    myRB.AddForce(base.UnitVectorToPoint(transform.position + transform.right) * thisMob.moveForce);
     }
 
-    public override void Look()
+    public void Look()
     {
         Vector3 playerPos = base.RadarReturnPlayer();
         float lookAng = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z - transform.position.z) * Mathf.Rad2Deg;

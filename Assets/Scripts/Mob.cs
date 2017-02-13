@@ -2,34 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Mob : MonoBehaviour {
+public class Mob : MonoBehaviour, IManaged
+{
+    public DepotItem myType;
+    public DepotItem myOrdinance;
+    public float myHealth;
+    public float moveForce;
 
-    public class MobClass
+    public Mob(float theHealth, DepotItem theType, DepotItem theOrdinance, float moveF)
     {
-        public DepotItem myType;
-        public DepotItem myOrdinance;
-        public float myHealth;
-        public float moveForce;
-
-        public MobClass(float theHealth, DepotItem theType, DepotItem theOrdinance, float moveF)
-        {
-            myHealth = theHealth;
-            myType = theType;
-            myOrdinance = theOrdinance;
-            moveForce = moveF;
-        }
+        myHealth = theHealth;
+        myType = theType;
+        myOrdinance = theOrdinance;
+        moveForce = moveF;
     }
 
-    // -------------------------------------------------------------
+    public virtual void OnManagerWithdraw()
+    {
+        Debug.Log("Withdrawn");
+    }
+
+    public virtual void OnManagerReturn()
+    {
+        Debug.Log("Returned");
+    }
+}
 
 
-    public abstract void Move();
+// -------------------------------------------------------------
 
-    public abstract void Look();
-
-
-    // -------------------------------------------------------------
-
+public class MobSubclassSandbox: MonoBehaviour
+{ 
     public virtual Vector3 ReturnTangentPoint(Vector3 here, Vector3 center, float radius)
     {
         float dist = Vector3.Distance(here, center);
@@ -57,22 +60,22 @@ public abstract class Mob : MonoBehaviour {
     public virtual Vector3 UnitVectorToPlayer()
     {
         Vector3 playerPos = RadarReturnPlayer();
-        return Vector3.Normalize(playerPos - transform.position);
+        return Vector3.Normalize(playerPos - this.transform.position);
     }
 
     public virtual void Shoot(DepotItem myOrdinancePassed, Vector3 position)
     {
         GameObject myOrd = GameObject.Find("PoolDepot").GetComponent<PoolDepot>().ObjRequest(myOrdinancePassed);
-        myOrd.transform.position = position  + transform.forward * 3;
+        myOrd.transform.position = position  + this.transform.forward * 3;
         myOrd.GetComponent<Rigidbody>().velocity = Vector3.zero;
         myOrd.SetActive(true);
-        myOrd.GetComponent<Rigidbody>().AddForce(transform.forward * 30, ForceMode.Impulse);
+        myOrd.GetComponent<Rigidbody>().AddForce(this.transform.forward * 30, ForceMode.Impulse);
     }
 
     public virtual void Kill(DepotItem myTypePassed)
     {
         GameObject myExp = GameObject.Find("PoolDepot").GetComponent<PoolDepot>().ObjRequest(DepotItem.explosion);
-        myExp.transform.position = transform.position;
+        myExp.transform.position = this.transform.position;
         myExp.SetActive(true);
         GameObject.Find("PoolDepot").GetComponent<PoolDepot>().ObjReturn(this.gameObject, myTypePassed);
         //Debug.Log(myTypePassed);

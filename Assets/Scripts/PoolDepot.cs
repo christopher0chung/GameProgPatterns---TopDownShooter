@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PoolDepot : MonoBehaviour {
 
+    private MobManager myMM;
+
     private GameObject bullet;
     public Queue<GameObject> bullets = new Queue<GameObject>();
 
@@ -21,6 +23,8 @@ public class PoolDepot : MonoBehaviour {
 
     void Awake ()
     {
+        myMM = GameObject.Find("ObjectsManager").GetComponent<MobManager>();
+
         bullet = (GameObject) Resources.Load("Bullet");
         explosion = (GameObject)Resources.Load("Explosion");
         enemyType1 = (GameObject)Resources.Load("EnemyType1");
@@ -32,38 +36,65 @@ public class PoolDepot : MonoBehaviour {
     {
         if (item == DepotItem.bullet)
         {
-            if (bullets.Count > 0)
+            if (bullets.Count > 0) {
                 return bullets.Dequeue();
+            }
             else
+            {
                 return Instantiate(bullet, transform);
+            }
         }
         else if (item == DepotItem.explosion)
         {
             if (explosions.Count > 0)
+            {
                 return explosions.Dequeue();
+            }
             else
+            {
                 return Instantiate(explosion, transform);
+            }
         }
         else if (item == DepotItem.enemyType1)
         {
             if (enemiesType1.Count > 0)
-                return enemiesType1.Dequeue();
+            {
+                GameObject thisMob = (GameObject)enemiesType1.Dequeue();
+                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                return thisMob;
+            }
             else
-                return Instantiate(enemyType1, transform);
+            {
+                GameObject thisMob = (GameObject)Instantiate(enemyType1, transform);
+                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                return thisMob; 
+            }
         }
         else if (item == DepotItem.enemyType2)
         {
             if (enemiesType2.Count > 0)
-                return enemiesType2.Dequeue();
+            {
+                GameObject thisMob = (GameObject)enemiesType2.Dequeue();
+                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                return thisMob;
+            }
             else
-                return Instantiate(enemyType2, transform);
+            {
+                GameObject thisMob = (GameObject)Instantiate(enemyType2, transform);
+                myMM.DepotToManager(thisMob.GetComponent<Mob>());
+                return thisMob;
+            }
         }
         else if (item == DepotItem.playerDeath)
         {
             if (enemiesType2.Count > 0)
+            {
                 return enemiesType2.Dequeue();
+            }
             else
+            {
                 return Instantiate(enemyType2, transform);
+            }
         }
         else return null;
     }

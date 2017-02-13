@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyType1 : Mob {
+public class EnemyType1 : MobSubclassSandbox {
 
-    public MobClass thisMob; 
+    public Mob thisMob; 
 
     public float shootDelay;
     public float shootInterval;
@@ -12,15 +13,19 @@ public class EnemyType1 : Mob {
     private Rigidbody myRB;
     private float shootTimer;
 
-    
-
     // Use this for initialization
-    void Start () {
+    void Awake () {
         myRB = GetComponent<Rigidbody>();
-        thisMob = new MobClass(1, DepotItem.enemyType1, DepotItem.bullet, 70);
+        thisMob = new Mob(1f, DepotItem.enemyType1, DepotItem.bullet, 70f);
 	}
+
+    void OnEnable()
+    {
+        thisMob.OnManagerWithdraw();
+    }
 	
-	void FixedUpdate () {
+	void FixedUpdate()
+    {
         Look();
         Move();
         TimedShoot();
@@ -30,6 +35,7 @@ public class EnemyType1 : Mob {
     {
         if (other.name == "Bullet(Clone)")
         {
+            thisMob.OnManagerReturn();
             base.Kill(thisMob.myType);
         }
     }
@@ -39,12 +45,12 @@ public class EnemyType1 : Mob {
     //Abstract funcs
     //------------
 
-    public override void Move ()
+    public void Move ()
     {
         myRB.AddForce(base.UnitVectorToPlayer() * thisMob.moveForce);
     }
 
-    public override void Look ()
+    public void Look ()
     {
         Vector3 playerPos = base.RadarReturnPlayer();
         float lookAng = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z - transform.position.z) * Mathf.Rad2Deg;
