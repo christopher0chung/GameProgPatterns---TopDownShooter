@@ -69,7 +69,7 @@ public class EnemyType1 : Mob, IShootable {
     {
         base.Init(iDN);
         myHealth = 5;
-        myOrdinance = ManagedObjectTypes.bulletNormal;
+        myOrdinance = ManagedObjectTypes.bulletPlayer;
         moveForce = 100;
 
         shootDelay = 2;

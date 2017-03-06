@@ -7,9 +7,9 @@ public abstract class Manager<T>: MonoBehaviour where T : IManaged
 {
     protected readonly List<T> ManagedObjects = new List<T>();
 
-    public abstract T Make(Vector3 where);
+    public abstract T Make(Vector3 where, string myTag);
 
-    public abstract List<T> Make(uint n, Vector3 where);
+    public abstract List<T> Make(uint n, Vector3 where, string myTag);
 
     public abstract void Unmake(T o);
 
@@ -24,4 +24,4 @@ public abstract class Manager<T>: MonoBehaviour where T : IManaged
     }
 }
 
-public enum ManagedObjectTypes { bulletNormal, explosion, enemyType1, enemyType2 }
+public enum ManagedObjectTypes { bulletPlayer, bulletEnemy, explosion, enemyType1, enemyType2 }

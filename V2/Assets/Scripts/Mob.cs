@@ -67,10 +67,10 @@ public class Mob: MonoBehaviour, IManaged
 
     public virtual void Shoot(ManagedObjectTypes myOrdinancePassed, Vector3 position)
     {
-        if (myOrdinancePassed == ManagedObjectTypes.bulletNormal)
+        if (myOrdinancePassed == ManagedObjectTypes.bulletPlayer)
         {
             // make a bullet
-            BulletNormal myOrd = myBM.Make(position + this.transform.forward * 3);
+            BulletBase myOrd = myBM.Make(position + this.transform.forward * 3, this.gameObject.tag);
             myOrd.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100, ForceMode.Impulse);
         }
     }

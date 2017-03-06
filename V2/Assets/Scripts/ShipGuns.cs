@@ -19,7 +19,7 @@ public class ShipGuns : MonoBehaviour {
         if (Input.GetMouseButton(0) && timer >= reloadTime)
         {
             timer = 0;
-            BulletNormal bullet = myBM.Make(transform.position + transform.forward * 3);
+            BulletBase bullet = myBM.Make(transform.position + transform.forward * 3, this.gameObject.tag);
             bullet.GetComponent<Rigidbody>().AddForce(transform.forward * 130f, ForceMode.Impulse);
         }
 
