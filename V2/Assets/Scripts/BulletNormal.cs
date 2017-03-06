@@ -4,43 +4,41 @@ using UnityEngine;
 
 public class BulletNormal : MonoBehaviour, IManaged {
 
-    private float timer;
-    private float flightTime = 3;
-
     public int bulletDamage;
+    public int bulletNum;
+    public double spawnTime;
+    public BulletManager myBM;
 
-	// Use this for initialization
-	void Start () {
-	}
+    public void Init (int num)
+    {
+        bulletNum = num;
+        myBM = GameObject.Find("Managers").GetComponent<BulletManager>();
+    }
 
     public virtual void OnMake()
     {
-        //Debug.Log("Withdrawn");
+        spawnTime = Time.time;
         return;
     }
 
     public virtual void OnUnmake()
     {
-        //Debug.Log("Returned");
+        Destroy(this.gameObject);
         return;
     }
 
-    // Update is called once per frame
-    void FixedUpdate () {
-
-        timer += Time.fixedDeltaTime;
-        if (timer >= flightTime)
-        {
-        }		
-	}
-
     void OnTriggerEnter (Collider other)
     {
-        if (other.gameObject.GetComponent<IShootable>() != null)
+        if (other.transform.root.gameObject.GetComponent<IShootable>() != null)
         {
-            other.gameObject.GetComponent<IShootable>().OnShoot(bulletDamage);
+            other.transform.root.gameObject.GetComponent<IShootable>().OnShoot(bulletDamage);
             // explosion
             // get rid of bullet
+            myBM.Unmake(this);
+        }
+        else
+        {
+            Debug.Log("Unshootable");
         }
     }
 }

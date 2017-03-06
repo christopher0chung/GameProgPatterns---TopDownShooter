@@ -24,6 +24,11 @@ public class HealthTextIndicator : MonoBehaviour
         myLife.color = invisColor;
     }
 
+    public void LateUpdate()
+    {
+        transform.parent.eulerAngles = Vector3.zero;
+    }
+
     public void UpdateLife(float health)
     {
         StopAllCoroutines();

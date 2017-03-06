@@ -33,7 +33,7 @@ public class HealthIndicator : MonoBehaviour {
         if (currentLife > 0)
         {
             currentLife = health/100;
-            Debug.Log(currentLife);
+            //Debug.Log(currentLife);
 
             StartCoroutine(AnimateLife(currentLife));
         }

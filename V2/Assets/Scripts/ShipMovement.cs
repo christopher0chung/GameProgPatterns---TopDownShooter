@@ -14,7 +14,7 @@ public class ShipMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        myCam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        myCam = Camera.main.GetComponent<Camera>();
         myRB = GetComponent<Rigidbody>();
         //myTP = transform.Find("ThrusterParticles").GetComponent<ThrusterParticles>();
 	}
@@ -33,25 +33,25 @@ public class ShipMovement : MonoBehaviour {
     }
     void CheckThrust()
     {
-        //if (Input.GetKeyDown(KeyCode.W))
-        //{
-        //    myRB.AddForce(transform.forward * fwdThrust, ForceMode.Impulse);
-        //    myTP.ThrustAnim(ThrustDir.fwd);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.S))
-        //{
-        //    myRB.AddForce(transform.forward * -aftThrust, ForceMode.Impulse);
-        //    myTP.ThrustAnim(ThrustDir.aft);
-        //}
-        //if (Input.GetKeyDown(KeyCode.D))
-        //{
-        //    myRB.AddForce(transform.right * strafeThrust, ForceMode.Impulse);
-        //    myTP.ThrustAnim(ThrustDir.stbd);
-        //}
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    myRB.AddForce(transform.right * -strafeThrust, ForceMode.Impulse);
-        //    myTP.ThrustAnim(ThrustDir.port);
-        //}
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            myRB.AddForce(transform.forward * fwdThrust, ForceMode.Impulse);
+            //myTP.ThrustAnim(ThrustDir.fwd);
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            myRB.AddForce(transform.forward * -aftThrust, ForceMode.Impulse);
+            //myTP.ThrustAnim(ThrustDir.aft);
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            myRB.AddForce(transform.right * strafeThrust, ForceMode.Impulse);
+            //myTP.ThrustAnim(ThrustDir.stbd);
+        }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            myRB.AddForce(transform.right * -strafeThrust, ForceMode.Impulse);
+            //myTP.ThrustAnim(ThrustDir.port);
+        }
     }
 }

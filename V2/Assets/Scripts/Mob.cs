@@ -4,28 +4,34 @@ using UnityEngine;
 
 public class Mob: MonoBehaviour, IManaged
 {
-    public ManagedObjects myType;
-    public ManagedObjects myOrdinance;
+    public BulletManager myBM;
+    public MobManager myMM;
+
+    public ManagedObjectTypes myOrdinance;
     public float myHealth;
     public float moveForce;
+    public float iDNum;
 
-    public virtual void Init(float theHealth, ManagedObjects theType, ManagedObjects theOrdinance, float moveF)
+    public float shootDelay;
+    public float shootInterval;
+
+
+    public virtual void Init(int iDN)
     {
-        myHealth = theHealth;
-        myType = theType;
-        myOrdinance = theOrdinance;
-        moveForce = moveF;
+        iDNum = iDN;
+        myBM = GameObject.Find("Managers").GetComponent<BulletManager>();
+        myMM = GameObject.Find("Managers").GetComponent<MobManager>();
+
     }
 
     public virtual void OnMake()
     {
-        //Debug.Log("Withdrawn");
         return;
     }
 
     public virtual void OnUnmake()
     {
-        //Debug.Log("Returned");
+        Destroy(this.gameObject);
         return;
     }
 
@@ -59,17 +65,17 @@ public class Mob: MonoBehaviour, IManaged
         return Vector3.Normalize(playerPos - this.transform.position);
     }
 
-    public virtual void Shoot(ManagedObjects myOrdinancePassed, Vector3 position)
+    public virtual void Shoot(ManagedObjectTypes myOrdinancePassed, Vector3 position)
     {
-        // make a bullet
-        GameObject myOrd;
-        //myOrd.transform.position = position  + this.transform.forward * 3;
-        //myOrd.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        //myOrd.SetActive(true);
-        //myOrd.GetComponent<Rigidbody>().AddForce(this.transform.forward * 30, ForceMode.Impulse);
+        if (myOrdinancePassed == ManagedObjectTypes.bulletNormal)
+        {
+            // make a bullet
+            BulletNormal myOrd = myBM.Make(position + this.transform.forward * 3);
+            myOrd.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100, ForceMode.Impulse);
+        }
     }
 
-    public virtual void Kill(ManagedObjects myTypePassed)
+    public virtual void Kill(ManagedObjectTypes myTypePassed)
     {
         // kill mob
     }
