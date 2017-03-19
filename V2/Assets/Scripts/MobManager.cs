@@ -69,7 +69,7 @@ public class MobManager : Manager<Mob> {
     {
         ManagedObjectTypes mO;
         int num = _rng.Next(0, 2);
-        Debug.Log(num);
+        //Debug.Log(num);
         if (num == 0)
             mO = global::ManagedObjectTypes.enemyType1;
         else
