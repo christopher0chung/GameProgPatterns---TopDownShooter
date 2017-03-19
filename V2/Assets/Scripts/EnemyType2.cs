@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyType2 : Mob {
+public class EnemyType2 : Mob, IShootable {
 
     private Rigidbody myRB;
     private float shootTimer;
@@ -10,6 +10,7 @@ public class EnemyType2 : Mob {
     // Use this for initialization
     void Awake () {
         myRB = GetComponent<Rigidbody>();
+        myType = ManagedObjectTypes.enemyType2;
         //thisMob = new Mob(1, DepotItem.enemyType2, DepotItem.bullet, 40);
     }
 
@@ -77,5 +78,20 @@ public class EnemyType2 : Mob {
 
         shootDelay = 2;
         shootInterval = .5f;
+    }
+
+
+    //------------
+    //iShootable Interface
+    //------------
+
+    public void OnShoot(int damage)
+    {
+        myHealth -= damage;
+
+        if (myHealth <= 0)
+        {
+            myMM.Unmake(this);
+        }
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class Manager<T>: MonoBehaviour where T : IManaged
 {
+    private readonly System.Random _rng = new System.Random();
+
     protected readonly List<T> ManagedObjects = new List<T>();
 
     public abstract T Make(Vector3 where, string myTag);

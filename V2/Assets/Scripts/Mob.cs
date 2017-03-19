@@ -7,6 +7,7 @@ public class Mob: MonoBehaviour, IManaged
     public BulletManager myBM;
     public MobManager myMM;
 
+    public ManagedObjectTypes myType;
     public ManagedObjectTypes myOrdinance;
     public float myHealth;
     public float moveForce;
@@ -21,7 +22,7 @@ public class Mob: MonoBehaviour, IManaged
         iDNum = iDN;
         myBM = GameObject.Find("Managers").GetComponent<BulletManager>();
         myMM = GameObject.Find("Managers").GetComponent<MobManager>();
-
+        gameObject.tag = "Enemy";
     }
 
     public virtual void OnMake()

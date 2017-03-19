@@ -10,6 +10,7 @@ public class EnemyType1 : Mob, IShootable {
 
     void Awake () {
         myRB = GetComponent<Rigidbody>();
+        myType = ManagedObjectTypes.enemyType1;
         //thisMob = new Mob(1f, DepotItem.enemyType1, DepotItem.bullet, 70f);
 	}
 
