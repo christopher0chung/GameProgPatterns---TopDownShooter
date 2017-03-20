@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -148,6 +149,29 @@ public class TaskManager : MonoBehaviour {
         else if (myType == TaskType.Combat)
             combatTasks.Add(myTask);
         myTask.SetStatus(TaskStatus.Pending);
+    }
+
+    public void AbortAll(TaskType myType)
+    {
+        if (myType == TaskType.Movement)
+        {
+            foreach (Task thisTask in movementTasks)
+            {
+                thisTask.SetStatus(TaskStatus.Aborted);
+            }
+        }
+    }
+
+    public void AbortType (TaskType myType, Task T)
+    {
+        if (myType == TaskType.Movement)
+        {
+            foreach (Task thisTask in movementTasks)
+            {
+                if (thisTask.GetType() == T.GetType())
+                    thisTask.SetStatus(TaskStatus.Aborted);
+            }
+        }
     }
 
     private void HandleCompletion(TaskType myType, Task task, int taskIndex)

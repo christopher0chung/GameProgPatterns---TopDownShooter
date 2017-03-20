@@ -37,7 +37,7 @@ public class EnemyType2 : Mob, IShootable {
     public void Move()
     {
         //if (Vector3.Distance(transform.position, Vector3.zero) > 10.2f || Vector3.Distance(transform.position, Vector3.zero) < 9.8f)
-            myRB.AddForce(UnitVectorToPoint(ReturnTangentPoint(transform.position, Vector3.zero, 30)) * base.moveForce);
+            myRB.AddForce(UnitVectorToPoint(ReturnTangentPoint(transform.position, Vector3.zero, 3f)) * base.moveForce);
         //else
         //    myRB.AddForce(base.UnitVectorToPoint(transform.position + transform.right) * thisMob.moveForce);
     }
