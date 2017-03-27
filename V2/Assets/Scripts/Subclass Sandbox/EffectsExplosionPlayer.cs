@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectsExplosionEnemy : EffectsBase
+public class EffectsExplosionPlayer : EffectsBase
 {
 
 }
