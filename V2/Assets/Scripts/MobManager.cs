@@ -85,16 +85,21 @@ public class MobManager : Manager<Mob> {
 
     public void NewWave (GameEvent myGE)
     {
-        if (waveCount >= 2)
+        // Currently not making use of myGE
+        if (waveCount == 2)
         {
             Instantiate(Resources.Load("Boss"), Vector3.zero, Quaternion.identity);
+        }
+        else if (waveCount >=3)
+        {
             return;
         }
-
-        // Currently not making use of myGE
-        for (int i = 0; i < waveCount; i++)
+        else
         {
-            Invoke("RandomPosSpawn", 1);
+            for (int i = 0; i < waveCount; i++)
+            {
+                Invoke("RandomPosSpawn", 1);
+            }
         }
         waveCount++;
     }

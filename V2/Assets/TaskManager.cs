@@ -6,10 +6,13 @@ using UnityEngine;
 public enum TaskType { Movement, Combat }
 public enum TaskStatus : byte { Detached, Pending, Working, Success, Fail, Aborted }
 
-public class Task : MonoBehaviour
+public class Task
 {
+    public GameObject GORef;
+
     public TaskStatus Status { get; private set; }
     public Task NextTask { get; private set; }
+
 
     public bool IsDetached { get { return Status == TaskStatus.Detached; } }
     public bool IsAttached { get { return Status != TaskStatus.Detached; } }
