@@ -2,39 +2,38 @@
 using BehaviorTree;
 using UnityEngine;
 
-public class BTEnemy : MonoBehaviour
+public class BTEnemy : MonoBehaviour, IShootable
 {
     private Tree<BTEnemy> _tree;
-    [SerializeField] private GameObject _player;
+    private GameObject _player;
     [SerializeField] private float _speed;
-    [SerializeField] private float _visibilityRange;
-    [SerializeField] private float _damagePerHit;
+    [SerializeField] private float _shootRange;
 
     private const float MaxHealth = 10;
-    [SerializeField] private float _health = MaxHealth;
+    [SerializeField] private float _health;
+    public LayerMask myLM;
+
+    private BulletManager myBM;
 
     private void Start()
     {
-        // We define the tree and use a selector at the root to pick the high level behavior (i.e. fight or flight)
+        myBM = GameObject.Find("Managers").GetComponent<BulletManager>();
+
+        _player = GameObject.FindGameObjectWithTag("Player");
+        _health = MaxHealth;
+
         _tree = new Tree<BTEnemy>(new Selector<BTEnemy>(
-            // (highest priority)
-            // Flee Behavior
-            new Sequence<BTEnemy>( // We use a sequence here since this is effectively a checklist...
-                                 // Sequences fail as soon as a child fails so they're a good way to check
-                                 // a bunch of conditions before doing something
-                new IsInDanger(), // If the enemy has taken a lot of damage AND...
-                new IsPlayerInRange(), // the player is in range...
-                new Flee() // then run away
+
+            new Sequence<BTEnemy>( 
+                new IsInDanger(), 
+                new Dodge() 
             ),
-            // Fight Behavior
-            // If we don't need to run then fight...
-            new Sequence<BTEnemy>( // Another sequence to check pre-conditions
-                new IsPlayerInRange(), // If the player is in range...
-                new Attack() // Attack
+            
+            new Sequence<BTEnemy>( 
+                new IsPlayerInRange(), 
+                new Attack() 
             ),
-            // (lowest priority)
-            // Idle behavior
-            // The idle behavior is on the bottom of list so if everything else fails we'll end up here
+         
             new Idle()
         ));
     }
@@ -44,68 +43,31 @@ public class BTEnemy : MonoBehaviour
         // Update the tree by passing it the context that it should use to drive its decisions/act on
         _tree.Update(this);
         // Draw a red circle around the enemy so we can see the detection radius
-        DrawVisibilityRange();
+        //DrawVisibilityRange();
     }
 
-    private void MoveTowardsPlayer()
+    public void OnShoot(int damage)
+    {
+        _health -= damage;
+    }
+
+    private void Strafe()
     {
         var playerDirection = (_player.transform.position - transform.position).normalized;
-        var body = GetComponent<Rigidbody>();
-        body.AddForce(playerDirection * _speed, ForceMode.Impulse);
+        var myRB = GetComponent<Rigidbody>();
+        myRB.AddForce(Quaternion.Euler(0, 90, 0) * playerDirection * _speed, ForceMode.Force);
     }
 
-    private void MoveAwayFromPlayer()
-    {
-        var fleeDirection = (transform.position - _player.transform.position).normalized;
-        var body = GetComponent<Rigidbody>();
-        body.AddForce(fleeDirection * _speed, ForceMode.Impulse);
-    }
+    private float timer;
 
-    private IEnumerator Flash(Color c, float duration, int times = 3)
+    private void Shoot()
     {
-        var material = gameObject.GetComponent<Renderer>().material;
-
-        for (var i = 0; i < times; i++)
+        timer += Time.deltaTime;
+        if (timer >= .5f)
         {
-            var startTime = Time.time;
-            var t = 0.0f;
-            while (t <= 1)
-            {
-                material.color = Color.Lerp(Color.white, c, t);
-                yield return null;
-                t = (Time.time - startTime) / duration;
-            }
-        }
-
-        material.color = Color.white;
-    }
-
-    private void OnCollisionEnter(Collision coll)
-    {
-        //if (coll.gameObject.GetComponent<Player>() == null) return;
-        //_health = Mathf.Max(_health - _damagePerHit, 0);
-        //StartCoroutine(Flash(Color.red, 0.15f));
-        //var body = GetComponent<Rigidbody>();
-        //var collisionNormal = (transform.position - coll.gameObject.transform.position).normalized;
-        //body.AddForce(collisionNormal * 7, ForceMode.Impulse);
-    }
-
-    private float _lastRange;
-    private void DrawVisibilityRange()
-    {
-        if (_lastRange != _visibilityRange)
-        {
-            var lineRenderer = GetComponent<LineRenderer>();
-            var offset = new Vector3(_visibilityRange, 0, 0);
-            var numSegments = lineRenderer.numPositions - 1;
-            var angleIncrement = 360.0f / numSegments;
-            for (var i = 0; i < numSegments; i++)
-            {
-                var newPos = Quaternion.Euler(0, 0, angleIncrement * i) * offset;
-                lineRenderer.SetPosition(i, newPos);
-            }
-            lineRenderer.SetPosition(numSegments, offset);
-            _lastRange = _visibilityRange;
+            timer -= .5f;
+            BulletBase myOrd = myBM.Make(this.transform.position + this.transform.forward * 3, this.gameObject.tag);
+            myOrd.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100, ForceMode.Impulse);
         }
     }
 
@@ -120,7 +82,23 @@ public class BTEnemy : MonoBehaviour
     {
         public override bool Update(BTEnemy enemy)
         {
-            return enemy._health < MaxHealth / 4;
+            var playerDirection = (enemy._player.transform.position - enemy.transform.position).normalized;
+            var myRB = enemy.GetComponent<Rigidbody>();
+            myRB.AddForce(playerDirection * enemy._speed *.25f, ForceMode.Force);
+
+            Ray NotRay = new Ray(enemy.transform.position, Vector3.one);
+            RaycastHit[] theHits = Physics.SphereCastAll(NotRay, 40, 0.1f, enemy.myLM, QueryTriggerInteraction.Collide);
+            //Debug.Log(theHits.Length);
+            for (int i = 0; i < theHits.Length; i++)
+            {
+                if (theHits[i].collider.gameObject.tag == "PlayerBullet")
+                {
+                    //Debug.Log("Found a bullet");
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
@@ -130,18 +108,18 @@ public class BTEnemy : MonoBehaviour
         {
             var playerPos = enemy._player.transform.position;
             var enemyPos = enemy.transform.position;
-            return Vector3.Distance(playerPos, enemyPos) < enemy._visibilityRange;
+            return Vector3.Distance(playerPos, enemyPos) < enemy._shootRange;
         }
     }
 
     ///////////////////
     /// Actions
     ///////////////////
-    private class Flee : Node<BTEnemy>
+    private class Dodge : Node<BTEnemy>
     {
         public override bool Update(BTEnemy enemy)
         {
-            enemy.MoveAwayFromPlayer();
+            enemy.Strafe();
             return true;
         }
     }
@@ -150,7 +128,7 @@ public class BTEnemy : MonoBehaviour
     {
         public override bool Update(BTEnemy enemy)
         {
-            enemy.MoveTowardsPlayer();
+            enemy.Shoot();
             return true;
         }
     }
