@@ -2,12 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipGuns : MonoBehaviour {
+public class ShipGuns : MonoBehaviour, ILevelManagerInitable
+{
 
     private float timer;
     public float reloadTime;
 
     public BulletManager myBM;
+
+    // Scene Manager
+    // ------------------------------------------
+    public void LevelLoaded (int level)
+    {
+        reloadTime += .005f * level;
+    }
+
+    public void LevelUnlaoded ()
+    {
+        GameObject.Find("Managers").GetComponent<GameStateInitialization>()._OnLoaded -= LevelLoaded;
+        GameObject.Find("Managers").GetComponent<GameStateInitialization>()._Unload -= LevelUnlaoded;
+    }
+
+    void Awake ()
+    {
+        //Register into 
+        GameObject.Find("Managers").GetComponent<GameStateInitialization>()._OnLoaded += LevelLoaded;
+        GameObject.Find("Managers").GetComponent<GameStateInitialization>()._Unload += LevelUnlaoded;
+    }
+    // ------------------------------------------
 
     void Start () {
         myBM = GameObject.Find("Managers").GetComponent<BulletManager>();
